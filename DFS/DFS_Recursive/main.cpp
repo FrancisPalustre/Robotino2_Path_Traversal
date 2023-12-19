@@ -270,40 +270,35 @@ map<string, vector<string> > removeEdges(map<string, vector<string> > graph, vec
     return graph;
 }
 
-//Print path and movements for a robot to move from start to desired node
-void roboMove(map<string, vector<string> > newGraph, string startNode, string desiredNode) {
-    map<string, bool> visited;
-    vector<string> carPath = DFS(newGraph, startNode, desiredNode, visited);
-
-    //Couts the final path
-    vector<string>::iterator path = carPath.begin();
-    for (path; path != carPath.end(); path++) {
-        cout << *path << " ";
-    } cout << endl;
-    
-    //Movement for Robotino
+//Movements for a robot to move from start to desired node
+void roboMove(map<string, vector<string> > graph, string startNode, string desiredNode) {
+    vector<string> roboPath = DFS(graph, startNode, desiredNode);
+ 
+    //Movement of Robotino based on index
     for (int i = 0; i < int(carPath.size()) - 1; i++) {
+ 
         //Position is based on current and next value in path
         int currPos = atoi(carPath.at(i).c_str());
         int nextPos = atoi(carPath.at(i + 1).c_str());
-
+ 
+        //values being +/- are based on your grid setup
         if ((currPos + 6) == nextPos) {
-            moveY(0,1);
+            moveY(0,1); //up
         }
-
+ 
         if ((currPos - 6) == nextPos) {
-            moveY(1,0);
+            moveY(1,0); //down
         }
-
+ 
         if ((currPos - 1) == nextPos) {
-            moveX(1,0);
+            moveX(1,0); //left
         }
-
+ 
         if ((currPos + 1) == nextPos) {
-            moveX(0,1);
+            moveX(0,1); //right
         }
     }
-    omni.setVelocity(0,0,0);
+    omni.setVelocity(0,0,0); //precautionary sake
 }
 
 int main(int argc, char **argv) {

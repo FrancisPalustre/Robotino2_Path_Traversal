@@ -235,42 +235,40 @@ vector<string> Dijkstra(map<string, map<string, int> > graph, string startNode, 
 
 //Print path and movements for a robot to move from start to desired node
 void roboMove(map<string, map<string, int> > graph, string startNode, string desiredNode) {
-	vector<string> carPath =  Dijkstra(graph, startNode, desiredNode);
+	vector<string> roboPath =  Dijkstra(graph, startNode, desiredNode);
 
 	//couts path
-    for (vector<string>::iterator it = carPath.begin(); it != carPath.end(); it++) {
-        cout << *it << " ";
-    } cout << endl;
+	for (vector<string>::iterator it = roboPath.begin(); it != roboPath.end(); it++) {
+		cout << *it << " ";
+	} cout << endl;
 
-    int currPos =0;
-    int nextPos =0;
+	int currPos =0;
+	int nextPos =0;
 
-    //Movement of Robotino
-    for (int i = 0; i < int(carPath.size()) - 1; i++) {
-        //Position is based on current and next value in path
-        currPos = atoi(carPath.at(i).c_str());
-        nextPos = atoi(carPath.at(i + 1).c_str());
+    	//Movement of Robotino
+    	for (int i = 0; i < int(carPath.size()) - 1; i++) {
+        	//Position is based on current and next value in path
+        	currPos = atoi(carPath.at(i).c_str());
+		nextPos = atoi(carPath.at(i + 1).c_str());
 
-        if ((currPos + 6) == nextPos) {
-            moveY(0,1);
-        }
+		//values being +/- are based on your grid setup
+        	if ((currPos + 6) == nextPos) {
+            		moveY(0,1); //up
+        	}
 
-        if ((currPos - 6) == nextPos) {
-            moveY(1,0);
-        }
+        	if ((currPos - 6) == nextPos) {
+            		moveY(1,0); //down
+        	}
 
-        if ((currPos - 1) == nextPos) {
-            moveX(1,0);
-        }
+        	if ((currPos - 1) == nextPos) {
+            		moveX(1,0); //left
+        	}
 
-        if ((currPos + 1) == nextPos) {
-            moveX(0,1);
-        }
-    }
-    cout <<endl;
-    cout << carPath.back();
-
-    omni.setVelocity(0,0,0);
+        	if ((currPos + 1) == nextPos) {
+            		moveX(0,1); //right
+        	}
+    	}
+    omni.setVelocity(0,0,0); //precautionary sake
 }
 
 //Remove edges of wanted nodes
@@ -307,46 +305,45 @@ int main(int argc, char **argv) {
         cout << "Unable to connect! Program stopped." << endl;
         return 0;
     }
-    //sleep(5);
+
 	//setting up graph
-    map<string, map<string, int> > graph = graphFunction();
+	map<string, map<string, int> > graph = graphFunction();
 
 	//input variables
-    string startingNode = "1";
-    string desiredNode = "36";
-    int nodeRemoval =0;
-    sleep(7);
+	string startingNode = "1";
+	string desiredNode = "36";
+	int nodeRemoval =0;
         
-    // cout << "Starting Node: ";
-    // cin >> startingNode;
+	cout << "Starting Node: ";
+	cin >> startingNode;
         
-    // cout << "Desired Node: ";
-    // cin >> desiredNode;
+	cout << "Desired Node: ";
+	cin >> desiredNode;
 
-    // cout << "\nHow many nodes to remove: ";
-    // cin >> nodeRemoval;
+	cout << "\nHow many nodes to remove: ";
+	cin >> nodeRemoval;
     
-	// //vector that houses the nodes/edges you want to remove from graph
-    // vector <string> removeVec;
-    // string input = "";
+	//vector that houses the nodes/edges you want to remove from graph
+	vector <string> removeVec;
+	string input = "";
     
-    // if (nodeRemoval != 0) {
-    //     cout << "\nList:" <<endl;
-    // }
+	if (nodeRemoval != 0) {
+		cout << "\nList:" <<endl;
+	}
     
-    // for (int i =0; i < nodeRemoval; i++) {
-    //     cout << "Node " << i+1 << ": ";
-    //     cin >> input;
-    //     removeVec.push_back(input);    
-    // }
+	for (int i =0; i < nodeRemoval; i++) {
+ 		cout << "Node " << i+1 << ": ";
+		cin >> input;
+		removeVec.push_back(input);    
+	}
 
 	//resultant graph after removing edges
-	//graph = removeEdges(graph, removeVec);
+	graph = removeEdges(graph, removeVec);
 
 	//resultant graph with the new weighted values
 	graph = randWeights(graph);
 
 	roboMove(graph, startingNode, desiredNode);
 
-    return 0;
+	return 0;
 }

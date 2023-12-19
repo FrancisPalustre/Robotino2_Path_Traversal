@@ -338,14 +338,6 @@ int main(int argc, char **argv) {
 
     //vector that houses the nodes/edges you want to remove from graph
     vector<string> removeVec(nodeRemoval);  
-    removeVec.push_back("4");
-    removeVec.push_back("8"); 
-    removeVec.push_back("9");
-    removeVec.push_back("20");
-    removeVec.push_back("21");
-    removeVec.push_back("28");
-    removeVec.push_back("29");
-    removeVec.push_back("31");
     string input = "";  
     
     for (int i = 0; i < nodeRemoval; i++) {

@@ -49,54 +49,53 @@ double getCurrentTime() {
 void moveX(int curr_X, int desired_X) {
     int checker = desired_X - curr_X; //determines if movement is positive or negative
     int distance = abs(checker); //how much travel is needed
-
+ 
     double start_time = getCurrentTime();
     double end_time = (distance * 1.772)+ start_time; //offset of 1.772 is used (can change to whatever is yours)
     double elapsed_time = 0;
-
+ 
     for (int i =0; i < distance;i++) {
         if (checker > 0) { //if positive...
-            elapsed_time = 0; //resetting time to avoid continous movement
+            elapsed_time = 0; //resetting time to avoid continuous movement
             do {
                 elapsed_time = getCurrentTime(); //updating elasped time
                 omni.setVelocity(0.0015,-0.2,0); //velocity of Robotino (adjust accordingly)
-                cout << end_time/100000000 << " - " << elapsed_time/100000000 <<endl; //somehow needed...
+               usleep(10000); //slight delay needed to avoid missing data
             } while (elapsed_time < end_time);
         } else { //if negative..
             elapsed_time = 0;
             do {
                 elapsed_time = getCurrentTime();
                 omni.setVelocity(-0.00151,0.2,0);
-                cout << end_time/100000000 << " - " << elapsed_time/100000000 <<endl;
-            } while (elapsed_time < end_time);
-        }
-    }
-    omni.setVelocity(0,0,0); //setting velocity to 0 for precautionary sake
+                usleep(10000);
+             } while (elapsed_time < end_time);
+     }
+     omni.setVelocity(0,0,0); //setting velocity to 0 for precautionary sake
 }
 
 //Robotino movement in Y-direction
 void moveY(int curr_Y, int desired_Y) { //same comments applied to this function
     int checker = desired_Y - curr_Y;
     int distance = abs(checker);
-
+ 
     double start_time = getCurrentTime();
     double end_time = (distance * 1.772)+ start_time;
     double elapsed_time = 0;
-
+ 
     for (int i =0; i < distance;i++) {
         if (checker > 0) {
             elapsed_time = 0;
             do {
                 elapsed_time = getCurrentTime();
                 omni.setVelocity(0.2,-0.00131,0);
-                cout << end_time/100000000 << " - " << elapsed_time/100000000 <<endl;
+                usleep(10000);
             } while (elapsed_time < end_time);
         } else {
             elapsed_time = 0;
             do {
                 elapsed_time = getCurrentTime();
                 omni.setVelocity(-0.2,0.01,0);
-                cout << end_time/100000000 << " - " << elapsed_time/100000000 <<endl;
+                usleep(10000);
             } while (elapsed_time < end_time);
         }
     }
@@ -271,37 +270,34 @@ map<string, vector<string> > removeEdges(map<string, vector<string> > graph, vec
 }
 
 //Print the path and movements for a robot to move from start to desired node
-void roboMove(map<string, vector<string> > newGraph, string startNode, string desiredNode) {
-    vector<string> carPath = BFS(newGraph, startNode, desiredNode);
-
-    //couts the final path
-    for (vector<string>::iterator it = carPath.begin(); it != carPath.end(); it++) {
-        cout << *it << " ";
-    } cout << endl;
-
-    //Movement of Robotino
+void roboMove(map<string, vector<string> > graph, string startNode, string desiredNode) {
+    vector<string> roboPath = BFS(graph, startNode, desiredNode); //can be DFS as well
+ 
+    //Movement of Robotino based on index
     for (int i = 0; i < int(carPath.size()) - 1; i++) {
+ 
         //Position is based on current and next value in path
         int currPos = atoi(carPath.at(i).c_str());
         int nextPos = atoi(carPath.at(i + 1).c_str());
-
-        if ((currPos + 4) == nextPos) {
-            //moveY(0,1);
+ 
+        //values being +/- are based on your grid setup
+        if ((currPos + 6) == nextPos) {
+            moveY(0,1); //up
         }
-
-        if ((currPos - 4) == nextPos) {
-            //moveY(1,0);
+ 
+        if ((currPos - 6) == nextPos) {
+            moveY(1,0); //down
         }
-
+ 
         if ((currPos - 1) == nextPos) {
-            //moveX(1,0);
+            moveX(1,0); //left
         }
-
+ 
         if ((currPos + 1) == nextPos) {
-            //moveX(0,1);
+            moveX(0,1); //right
         }
     }
-    omni.setVelocity(0,0,0);
+    omni.setVelocity(0,0,0); //precautionary sake
 }
 
 int main(int argc, char **argv) {
@@ -332,13 +328,13 @@ int main(int argc, char **argv) {
     int nodeRemoval = 0;
     
     cout << "Starting Node: ";
-    // cin >> startingNode;
+    cin >> startingNode;
     
-    // cout << "\nDesired Node: ";
-    // cin >> desiredNode;
+    cout << "\nDesired Node: ";
+    cin >> desiredNode;
 
-    // cout << "\nHow many nodes to remove: ";
-    // cin >> nodeRemoval;
+    cout << "\nHow many nodes to remove: ";
+    cin >> nodeRemoval;
 
     //vector that houses the nodes/edges you want to remove from graph
     vector<string> removeVec(nodeRemoval);  
@@ -350,13 +346,13 @@ int main(int argc, char **argv) {
     removeVec.push_back("28");
     removeVec.push_back("29");
     removeVec.push_back("31");
-    //string input = "";  
+    string input = "";  
     
-    // for (int i = 0; i < nodeRemoval; i++) {
-    //     cout << "Node " << i+1 << ": ";
-    //     cin >> input;
-    //     removeVec.push_back(input); 
-    // }
+    for (int i = 0; i < nodeRemoval; i++) {
+	cout << "Node " << i+1 << ": ";
+        cin >> input;
+        removeVec.push_back(input); 
+    }
     
     //Resultant graph after changes
     graph = removeEdges(graph, removeVec);

@@ -282,7 +282,7 @@ map<string, vector<string> > removeEdges(map<string, vector<string> > graph, vec
 
 //Print the path and movements for a robot to move from start to desired node
 void roboMove(map<string, vector<string> > graph, string startNode, string desiredNode) {
-    vector<string> roboPath = BFS(graph, startNode, desiredNode); //can be DFS as well
+    vector<string> roboPath = DFS(graph, startNode, desiredNode);
  
     //Movement of Robotino based on index
     for (int i = 0; i < int(carPath.size()) - 1; i++) {

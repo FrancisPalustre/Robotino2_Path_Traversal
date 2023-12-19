@@ -281,37 +281,34 @@ map<string, vector<string> > removeEdges(map<string, vector<string> > graph, vec
 }
 
 //Print the path and movements for a robot to move from start to desired node
-void roboMove(map<string, vector<string> > newGraph, string startNode, string desiredNode) {
-    vector<string> carPath = DFS(newGraph, startNode, desiredNode);
-
-    //Couts the final path
-    for (vector<string>::iterator it = carPath.begin(); it != carPath.end(); it++) {
-        cout << *it << " ";
-    } cout << endl;
-    
-    //Movement of Robotino
+void roboMove(map<string, vector<string> > graph, string startNode, string desiredNode) {
+    vector<string> roboPath = BFS(graph, startNode, desiredNode); //can be DFS as well
+ 
+    //Movement of Robotino based on index
     for (int i = 0; i < int(carPath.size()) - 1; i++) {
+ 
         //Position is based on current and next value in path
         int currPos = atoi(carPath.at(i).c_str());
         int nextPos = atoi(carPath.at(i + 1).c_str());
-
+ 
+        //values being +/- are based on your grid setup
         if ((currPos + 6) == nextPos) {
-            moveY(0,1);
+            moveY(0,1); //up
         }
-
+ 
         if ((currPos - 6) == nextPos) {
-            moveY(1,0);
+            moveY(1,0); //down
         }
-
+ 
         if ((currPos - 1) == nextPos) {
-            moveX(1,0);
+            moveX(1,0); //left
         }
-
+ 
         if ((currPos + 1) == nextPos) {
-            moveX(0,1);
+            moveX(0,1); //right
         }
     }
-    omni.setVelocity(0,0,0);
+    omni.setVelocity(0,0,0); //precautionary sake
 }
 
 int main(int argc, char **argv) {
@@ -341,18 +338,19 @@ int main(int argc, char **argv) {
     string desiredNode = "36";
     int nodeRemoval = 0;
     
-    // cout << "Starting Node: ";
-    // cin >> startingNode;
+    cout << "Starting Node: ";
+    cin >> startingNode;
     
-    // cout << "\nDesired Node: ";
-    // cin >> desiredNode;
+    cout << "\nDesired Node: ";
+    cin >> desiredNode;
 
-    // cout << "\nHow many nodes to remove: ";
-    // cin >> nodeRemoval;
+    cout << "\nHow many nodes to remove: ";
+    cin >> nodeRemoval;
 
-    // //vector that houses the nodes/edges you want to remove from graph
+    //vector that houses the nodes/edges you want to remove from graph
     vector<string> removeVec(nodeRemoval);  
-    // string input = "";   
+    string input = "";   
+    
     removeVec.push_back("4");
     removeVec.push_back("8"); 
     removeVec.push_back("9");
@@ -362,11 +360,11 @@ int main(int argc, char **argv) {
     removeVec.push_back("29");
     removeVec.push_back("31");
     
-    // for (int i = 0; i < nodeRemoval; i++) {
-    //     cout << "Node " << i+1 << ": ";
-    //     cin >> input;
-    //     removeVec.push_back(input); 
-    // }
+    for (int i = 0; i < nodeRemoval; i++) {
+        cout << "Node " << i+1 << ": ";
+        cin >> input;
+        removeVec.push_back(input); 
+    }
     
     // //Resultant graph after changes
     graph = removeEdges(graph, removeVec);
